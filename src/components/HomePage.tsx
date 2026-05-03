@@ -37,7 +37,7 @@ export default function HomePage() {
     timeoutRef.current = setTimeout(() => {
       alert("Sesión expirada por inactividad");
       handleLogout();
-    }, 5 * 60 * 1000); 
+    }, 5 * 60 * 1000);
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function HomePage() {
       window.addEventListener(event, resetTimer)
     );
 
-    resetTimer(); 
+    resetTimer();
 
     return () => {
       events.forEach((event) =>
@@ -95,6 +95,9 @@ export default function HomePage() {
         programas: item.programas.map((p: any) => ({
           nombre: p.nombre,
           estudiantePensum: p.estudiantePensum,
+          jornada: p.jornada,
+          categoria: p.categoria,
+          situacion: p.situacion,
           liquidaciones: p.liquidaciones.map((l: any) => ({
             anio: l.anio,
             periodo: l.periodo,

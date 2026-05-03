@@ -104,8 +104,14 @@ export default function StudentCard({ estudiante }: Props) {
 
                   <div>
                     <p className={styles.programaNombre}>{prog.nombre}</p>
+
                     <p className={styles.programaPensum}>
                       Pensum {prog.estudiantePensum}
+                    </p>
+
+                    {/* 🔥 NUEVOS CAMPOS */}
+                    <p className={styles.programaExtra}>
+                      {prog.jornada || "—"} · {prog.categoria || "—"} · {prog.situacion || "—"}
                     </p>
                   </div>
 

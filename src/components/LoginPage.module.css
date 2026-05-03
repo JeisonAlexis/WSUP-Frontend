@@ -16,7 +16,7 @@
    LEFT PANEL
 ════════════════════════════════ */
 .left {
-  flex: 0 0 750px;
+  flex: 0 0 700px;
   display: flex;
   flex-direction: column;
   justify-content: center;

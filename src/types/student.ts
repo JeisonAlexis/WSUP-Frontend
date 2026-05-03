@@ -13,6 +13,9 @@ export interface Liquidacion {
 export interface Programa {
   nombre: string;
   estudiantePensum: number;
+  jornada?: string;
+  categoria?: string;
+  situacion?: string;
   liquidaciones: Liquidacion[];
 }
 
