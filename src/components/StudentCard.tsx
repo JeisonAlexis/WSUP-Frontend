@@ -31,6 +31,7 @@ export default function StudentCard({ estudiante }: Props) {
 
   return (
     <div className={`${styles.card} ${hayPendientes ? styles.cardAlert : ""}`}>
+      
       {/* HEADER */}
       <div className={styles.header}>
         <div className={`${styles.avatar} ${hayPendientes ? styles.avatarAlert : ""}`}>
@@ -44,6 +45,16 @@ export default function StudentCard({ estudiante }: Props) {
             <span className={styles.docBadge}>{estudiante.tipoId}</span>
             <span className={styles.docNum}>{estudiante.identificacion}</span>
           </div>
+          
+          {/* usuario */}
+          {estudiante.usuario && (
+            <div className={styles.userRow}>
+              <span className={styles.userLabel}>Usuario:</span>
+              <span className={styles.userValue}>
+                {estudiante.usuario}
+              </span>
+            </div>
+          )}
         </div>
 
         {hayPendientes && (
@@ -83,70 +94,80 @@ export default function StudentCard({ estudiante }: Props) {
       {/* BODY */}
       {expanded && (
         <div className={styles.body}>
-          {estudiante.programas.map((prog, pi) => (
-            <div key={pi} className={styles.programa}>
-              <div className={styles.programaHeader}>
-                <div className={styles.programaIcon}>🎓</div>
+          {estudiante.programas.length === 0 ? (
+            <p className={styles.emptyFilter}>Sin programas registrados</p>
+          ) : (
+            estudiante.programas.map((prog, pi) => (
+              <div key={pi} className={styles.programa}>
+                <div className={styles.programaHeader}>
+                  <div className={styles.programaIcon}>🎓</div>
 
-                <div>
-                  <p className={styles.programaNombre}>{prog.nombre}</p>
-                  <p className={styles.programaPensum}>
-                    Pensum {prog.estudiantePensum}
-                  </p>
+                  <div>
+                    <p className={styles.programaNombre}>{prog.nombre}</p>
+                    <p className={styles.programaPensum}>
+                      Pensum {prog.estudiantePensum}
+                    </p>
+                  </div>
+
+                  <span className={styles.liqCount}>
+                    {prog.liquidaciones.length} registro
+                    {prog.liquidaciones.length !== 1 ? "s" : ""}
+                  </span>
                 </div>
 
-                <span className={styles.liqCount}>
-                  {prog.liquidaciones.length} registro
-                  {prog.liquidaciones.length !== 1 ? "s" : ""}
-                </span>
-              </div>
-
-              <div className={styles.liquidaciones}>
-                {prog.liquidaciones.map((liq, li) => (
-                  <div
-                    key={li}
-                    className={`${styles.liqRow} ${
-                      liq.estado === "PENDIENTE"
-                        ? styles.liqPendiente
-                        : styles.liqPagado
-                    }`}
-                  >
-                    <div className={styles.liqLeft}>
-                      <span
-                        className={`${styles.estadoBadge} ${
+                <div className={styles.liquidaciones}>
+                  {prog.liquidaciones.length === 0 ? (
+                    <p className={styles.emptyFilter}>
+                      Sin liquidaciones
+                    </p>
+                  ) : (
+                    prog.liquidaciones.map((liq, li) => (
+                      <div
+                        key={li}
+                        className={`${styles.liqRow} ${
                           liq.estado === "PENDIENTE"
-                            ? styles.estadoPendiente
-                            : styles.estadoPagado
+                            ? styles.liqPendiente
+                            : styles.liqPagado
                         }`}
                       >
-                        {liq.estado === "PAGADO" ? "✓" : "!"} {liq.estado}
-                      </span>
+                        <div className={styles.liqLeft}>
+                          <span
+                            className={`${styles.estadoBadge} ${
+                              liq.estado === "PENDIENTE"
+                                ? styles.estadoPendiente
+                                : styles.estadoPagado
+                            }`}
+                          >
+                            {liq.estado === "PAGADO" ? "✓" : "!"} {liq.estado}
+                          </span>
 
-                      <span className={styles.liqPeriodo}>
-                        {liq.anio} – P{liq.periodo}
-                      </span>
-                    </div>
+                          <span className={styles.liqPeriodo}>
+                            {liq.anio} – P{liq.periodo}
+                          </span>
+                        </div>
 
-                    <div className={styles.liqRight}>
-                      <span
-                        className={`${styles.liqSaldo} ${
-                          liq.saldo > 0
-                            ? styles.saldoRed
-                            : styles.saldoGreen
-                        }`}
-                      >
-                        ${formatSaldo(liq.saldo)}
-                      </span>
+                        <div className={styles.liqRight}>
+                          <span
+                            className={`${styles.liqSaldo} ${
+                              liq.saldo > 0
+                                ? styles.saldoRed
+                                : styles.saldoGreen
+                            }`}
+                          >
+                            ${formatSaldo(liq.saldo)}
+                          </span>
 
-                      <span className={styles.liqRef}>
-                        {liq.referencia}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                          <span className={styles.liqRef}>
+                            {liq.referencia}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       )}
 

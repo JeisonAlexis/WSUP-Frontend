@@ -91,6 +91,7 @@ export default function HomePage() {
         nombre: item.estudiante.nombre,
         identificacion: item.estudiante.documento,
         tipoId: "CC",
+        usuario: item.estudiante.usuario,
         programas: item.programas.map((p: any) => ({
           nombre: p.nombre,
           estudiantePensum: p.estudiantePensum,
