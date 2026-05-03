@@ -1,0 +1,427 @@
+/* ── Google Font import ── */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+/* ════════════════════════════════
+   WRAPPER
+════════════════════════════════ */
+.wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: "Manrope", sans-serif;
+  overflow: hidden;
+}
+
+/* ════════════════════════════════
+   LEFT PANEL
+════════════════════════════════ */
+.left {
+  flex: 0 0 750px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  background: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  top: 36px;
+  left: 48px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logoIcon {
+  color: #7c3aed;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 0.01em;
+}
+
+/* Hero text */
+.hero {
+  margin-bottom: 36px;
+}
+
+.heading {
+  font-size: clamp(30px, 3.5vw, 42px);
+  font-weight: 800;
+  color: #0f0f1a;
+  line-height: 1.15;
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+}
+
+.subheading {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: #374151;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: #d1d5db;
+}
+
+.input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+/* Remember me row */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxHidden {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkboxCustom {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+  background: #fff;
+}
+
+.checkboxCustom.checked {
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.checkboxCustom svg {
+  width: 10px;
+  height: 8px;
+}
+
+.checkText {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.forgot {
+  background: none;
+  border: none;
+  font-family: "Manrope", sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.forgot:hover {
+  color: #7c3aed;
+}
+
+/* Sign In button */
+.signIn {
+  margin-top: 8px;
+  padding: 14px 0;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  width: 140px;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+
+.signIn:hover {
+  background: #6d28d9;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  transform: translateY(-1px);
+}
+
+.signIn:active {
+  transform: translateY(0);
+}
+
+/* Sign up link */
+.signup {
+  position: absolute;
+  bottom: 36px;
+  left: 48px;
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.signupLink {
+  color: #7c3aed;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+}
+
+/* ════════════════════════════════
+   RIGHT PANEL
+════════════════════════════════ */
+.right {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 40%, #7c3aed 70%, #a78bfa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@keyframes float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(1deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+.illustration {
+  position: relative;
+  z-index: 2;
+  width: 75%;
+  max-width: 650px;
+  height: auto;
+  object-fit: contain;
+
+  animation: float 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+
+  will-change: transform;
+  transform: translateZ(0); 
+  backface-visibility: hidden; 
+
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+}
+
+/* Placeholder (quitar cuando pongas la imagen) */
+.illustrationPlaceholder {
+  position: relative;
+  z-index: 2;
+  width: 65%;
+  max-width: 420px;
+  aspect-ratio: 3/4;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+.placeholderInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.placeholderIcon {
+  width: 80px;
+  height: 80px;
+  opacity: 0.7;
+}
+
+.placeholderText {
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.placeholderHint {
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Decorative clouds ── */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50px;
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+/* Top-left cloud */
+.cloudTL {
+  width: 120px;
+  height: 40px;
+  top: 60px;
+  left: -20px;
+}
+.cloudTL::before {
+  width: 60px;
+  height: 60px;
+  top: -28px;
+  left: 18px;
+}
+.cloudTL::after {
+  width: 44px;
+  height: 44px;
+  top: -20px;
+  left: 52px;
+}
+
+/* Top-right cloud */
+.cloudTR {
+  width: 90px;
+  height: 30px;
+  top: 40px;
+  right: 40px;
+}
+.cloudTR::before {
+  width: 44px;
+  height: 44px;
+  top: -22px;
+  left: 12px;
+}
+.cloudTR::after {
+  width: 32px;
+  height: 32px;
+  top: -16px;
+  left: 40px;
+}
+
+/* Bottom-left cloud */
+.cloudBL {
+  width: 100px;
+  height: 34px;
+  bottom: 80px;
+  left: 20px;
+}
+.cloudBL::before {
+  width: 50px;
+  height: 50px;
+  top: -24px;
+  left: 14px;
+}
+.cloudBL::after {
+  width: 36px;
+  height: 36px;
+  top: -18px;
+  left: 48px;
+}
+
+/* Bottom-right cloud */
+.cloudBR {
+  width: 80px;
+  height: 28px;
+  bottom: 50px;
+  right: 60px;
+}
+.cloudBR::before {
+  width: 38px;
+  height: 38px;
+  top: -20px;
+  left: 10px;
+}
+.cloudBR::after {
+  width: 28px;
+  height: 28px;
+  top: -14px;
+  left: 38px;
+}
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .left {
+    flex: none;
+    padding: 80px 32px 48px;
+  }
+
+  .right {
+    flex: 1;
+    min-height: 300px;
+  }
+
+  .illustrationPlaceholder {
+    width: 80%;
+  }
+}
