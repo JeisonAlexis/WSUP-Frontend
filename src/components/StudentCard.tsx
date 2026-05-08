@@ -44,7 +44,7 @@ export default function StudentCard({ estudiante }: Props) {
         <div className={styles.avatarWrapper}>
           {estudiante.foto ? (
             <img
-              src={`${API_URL}/${estudiante.foto}`}
+              src={`${API_URL}/uploads/${estudiante.foto}`}
               alt={estudiante.nombre}
               className={styles.avatarImg}
             />
