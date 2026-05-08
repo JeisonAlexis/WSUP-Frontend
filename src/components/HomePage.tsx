@@ -24,6 +24,7 @@ export default function HomePage() {
 
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
+
     window.onpopstate = () => {
       handleLogout();
     };
@@ -72,7 +73,6 @@ export default function HomePage() {
         }
       );
 
-
       if (res.status === 401) {
         handleLogout();
         return;
@@ -91,13 +91,24 @@ export default function HomePage() {
         nombre: item.estudiante.nombre,
         identificacion: item.estudiante.documento,
         tipoId: "CC",
+
         usuario: item.estudiante.usuario,
+
+        correo: item.estudiante.correo,
+        telefono: item.estudiante.telefono,
+
+        foto: item.estudiante.foto
+          ? `${API_URL}/${item.estudiante.foto}`
+          : null,
+
         programas: item.programas.map((p: any) => ({
           nombre: p.nombre,
           estudiantePensum: p.estudiantePensum,
+
           jornada: p.jornada,
           categoria: p.categoria,
           situacion: p.situacion,
+
           liquidaciones: p.liquidaciones.map((l: any) => ({
             anio: l.anio,
             periodo: l.periodo,
@@ -117,7 +128,9 @@ export default function HomePage() {
     setLoading(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Enter") handleSearch();
   };
 
@@ -129,40 +142,48 @@ export default function HomePage() {
 
   return (
     <div className={styles.page}>
-      {/* NAV */}
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
           <span className={styles.navLogoIcon}>▪</span>
           <span className={styles.navLogoText}>WSUP</span>
         </div>
 
-        {/* 🔴 BOTÓN LOGOUT */}
-        <button className={styles.logoutBtn} onClick={handleLogout}>
+        <button
+          className={styles.logoutBtn}
+          onClick={handleLogout}
+        >
           Cerrar sesión
         </button>
       </nav>
 
-      {/* HERO */}
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Consulta de Estudiantes</h1>
+          <h1 className={styles.heroTitle}>
+            Consulta de Estudiantes
+          </h1>
 
           <div className={styles.searchBox}>
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Busca segun nombre, codigo o programa"
+              placeholder="Busca según nombre, código, usuario o programa"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
             />
 
-            <button onClick={handleSearch} className={styles.searchBtn}>
+            <button
+              onClick={handleSearch}
+              className={styles.searchBtn}
+            >
               Buscar
             </button>
 
             {query && (
-              <button onClick={handleClear} className={styles.clearBtn}>
+              <button
+                onClick={handleClear}
+                className={styles.clearBtn}
+              >
                 ✕
               </button>
             )}
@@ -170,12 +191,17 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* RESULTADOS */}
       <div className={styles.content}>
-        {loading && <p>Cargando...</p>}
+        {loading && (
+          <p className={styles.loading}>
+            Cargando...
+          </p>
+        )}
 
         {buscado && !loading && estudiantes.length === 0 && (
-          <p>No encontrado</p>
+          <p className={styles.empty}>
+            No encontrado
+          </p>
         )}
 
         {estudiantes.length > 0 && (

@@ -25,6 +25,9 @@ export interface Estudiante {
   identificacion: string;
   tipoId: string;
   usuario?: string;
+  correo?: string;
+  telefono?: string;
+  foto?: string;
   programas: Programa[];
 }
 

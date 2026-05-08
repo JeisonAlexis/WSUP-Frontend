@@ -64,10 +64,10 @@ export default function LoginPage() {
 
         <div className={styles.hero}>
           <h1 className={styles.heading}>
-            Holla,<br />Welcome Back
+            Hola,<br />Bienvenido de vuelta
           </h1>
           <p className={styles.subheading}>
-            Hey, welcome back to your special place
+            ¿Que será lo que quieres hacer hoy?
           </p>
         </div>
 

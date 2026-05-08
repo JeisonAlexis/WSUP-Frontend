@@ -2,12 +2,16 @@ import { useState } from "react";
 import type { Estudiante } from "../types/student";
 import styles from "./StudentCard.module.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface Props {
   estudiante: Estudiante;
 }
 
 function formatSaldo(saldo: number) {
-  return saldo.toLocaleString("es-CO", { minimumFractionDigits: 2 });
+  return saldo.toLocaleString("es-CO", {
+    minimumFractionDigits: 2,
+  });
 }
 
 export default function StudentCard({ estudiante }: Props) {
@@ -24,35 +28,75 @@ export default function StudentCard({ estudiante }: Props) {
   const hayPendientes = totalPendiente > 0;
 
   const palabras = estudiante.nombre.split(" ");
+
   const iniciales =
     palabras.length >= 2
       ? palabras[0][0] + palabras[1][0]
       : palabras[0].slice(0, 2);
 
   return (
-    <div className={`${styles.card} ${hayPendientes ? styles.cardAlert : ""}`}>
-      
-      {/* HEADER */}
+    <div
+      className={`${styles.card} ${
+        hayPendientes ? styles.cardAlert : ""
+      }`}
+    >
       <div className={styles.header}>
-        <div className={`${styles.avatar} ${hayPendientes ? styles.avatarAlert : ""}`}>
-          {iniciales}
+        <div className={styles.avatarWrapper}>
+          {estudiante.foto ? (
+            <img
+              src={`${API_URL}/${estudiante.foto}`}
+              alt={estudiante.nombre}
+              className={styles.avatarImg}
+            />
+          ) : (
+            <div
+              className={`${styles.avatar} ${
+                hayPendientes ? styles.avatarAlert : ""
+              }`}
+            >
+              {iniciales}
+            </div>
+          )}
         </div>
 
         <div className={styles.headerInfo}>
-          <h3 className={styles.nombre}>{estudiante.nombre}</h3>
+          <h3 className={styles.nombre}>
+            {estudiante.nombre}
+          </h3>
 
           <div className={styles.docRow}>
-            <span className={styles.docBadge}>{estudiante.tipoId}</span>
-            <span className={styles.docNum}>{estudiante.identificacion}</span>
+            <span className={styles.docBadge}>
+              {estudiante.tipoId}
+            </span>
+
+            <span className={styles.docNum}>
+              {estudiante.identificacion}
+            </span>
           </div>
-          
-          {/* usuario */}
+
           {estudiante.usuario && (
             <div className={styles.userRow}>
-              <span className={styles.userLabel}>Usuario:</span>
+              <span className={styles.userLabel}>
+                Usuario:
+              </span>
+
               <span className={styles.userValue}>
                 {estudiante.usuario}
               </span>
+            </div>
+          )}
+
+          {estudiante.correo && (
+            <div className={styles.infoRow}>
+              <span>📧</span>
+              <span>{estudiante.correo}</span>
+            </div>
+          )}
+
+          {estudiante.telefono && (
+            <div className={styles.infoRow}>
+              <span>📱</span>
+              <span>{estudiante.telefono}</span>
             </div>
           )}
         </div>
@@ -65,59 +109,90 @@ export default function StudentCard({ estudiante }: Props) {
         )}
       </div>
 
-      {/* STATS */}
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <span className={styles.statValue}>{estudiante.programas.length}</span>
+          <span className={styles.statValue}>
+            {estudiante.programas.length}
+          </span>
+
           <span className={styles.statLabel}>
-            {estudiante.programas.length === 1 ? "Programa" : "Programas"}
+            {estudiante.programas.length === 1
+              ? "Programa"
+              : "Programas"}
           </span>
         </div>
 
         <div className={styles.statDivider} />
 
         <div className={styles.stat}>
-          <span className={styles.statValue}>{totalLiquidaciones}</span>
-          <span className={styles.statLabel}>Liquidaciones</span>
+          <span className={styles.statValue}>
+            {totalLiquidaciones}
+          </span>
+
+          <span className={styles.statLabel}>
+            Liquidaciones
+          </span>
         </div>
 
         <div className={styles.statDivider} />
 
-        <div className={`${styles.stat} ${hayPendientes ? styles.statRed : styles.statGreen}`}>
+        <div
+          className={`${styles.stat} ${
+            hayPendientes
+              ? styles.statRed
+              : styles.statGreen
+          }`}
+        >
           <span className={styles.statValue}>
-            {hayPendientes ? `$${formatSaldo(totalPendiente)}` : "$0,00"}
+            {hayPendientes
+              ? `$${formatSaldo(totalPendiente)}`
+              : "$0,00"}
           </span>
-          <span className={styles.statLabel}>Saldo total</span>
+
+          <span className={styles.statLabel}>
+            Saldo total
+          </span>
         </div>
       </div>
 
-      {/* BODY */}
       {expanded && (
         <div className={styles.body}>
           {estudiante.programas.length === 0 ? (
-            <p className={styles.emptyFilter}>Sin programas registrados</p>
+            <p className={styles.emptyFilter}>
+              Sin programas registrados
+            </p>
           ) : (
             estudiante.programas.map((prog, pi) => (
-              <div key={pi} className={styles.programa}>
+              <div
+                key={pi}
+                className={styles.programa}
+              >
                 <div className={styles.programaHeader}>
-                  <div className={styles.programaIcon}>🎓</div>
+                  <div className={styles.programaIcon}>
+                    🎓
+                  </div>
 
                   <div>
-                    <p className={styles.programaNombre}>{prog.nombre}</p>
+                    <p className={styles.programaNombre}>
+                      {prog.nombre}
+                    </p>
 
                     <p className={styles.programaPensum}>
                       Pensum {prog.estudiantePensum}
                     </p>
 
-                    {/* 🔥 NUEVOS CAMPOS */}
                     <p className={styles.programaExtra}>
-                      {prog.jornada || "—"} · {prog.categoria || "—"} · {prog.situacion || "—"}
+                      {prog.jornada || "—"} ·{" "}
+                      {prog.categoria || "—"} ·{" "}
+                      {prog.situacion || "—"}
                     </p>
                   </div>
 
                   <span className={styles.liqCount}>
                     {prog.liquidaciones.length} registro
-                    {prog.liquidaciones.length !== 1 ? "s" : ""}
+                    {prog.liquidaciones.length !== 1
+                      ? "s"
+                      : ""}
                   </span>
                 </div>
 
@@ -144,7 +219,10 @@ export default function StudentCard({ estudiante }: Props) {
                                 : styles.estadoPagado
                             }`}
                           >
-                            {liq.estado === "PAGADO" ? "✓" : "!"} {liq.estado}
+                            {liq.estado === "PAGADO"
+                              ? "✓"
+                              : "!"}{" "}
+                            {liq.estado}
                           </span>
 
                           <span className={styles.liqPeriodo}>
@@ -177,18 +255,22 @@ export default function StudentCard({ estudiante }: Props) {
         </div>
       )}
 
-      {/* TOGGLE */}
       <button
         className={styles.toggleBtn}
-        onClick={() => setExpanded((v) => !v)}
+        onClick={() =>
+          setExpanded((v) => !v)
+        }
         aria-expanded={expanded}
       >
         {expanded
           ? "Ocultar detalle"
           : `Ver detalle · ${totalLiquidaciones} liquidaciones`}
+
         <span
           className={`${styles.chevron} ${
-            expanded ? styles.chevronUp : ""
+            expanded
+              ? styles.chevronUp
+              : ""
           }`}
         >
           ›
