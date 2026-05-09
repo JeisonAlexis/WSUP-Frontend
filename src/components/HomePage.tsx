@@ -5,16 +5,23 @@ import styles from "./HomePage.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const ITEMS_PER_PAGE = 10;
-
 export default function HomePage() {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
   const [buscado, setBuscado] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [estudiantes, setEstudiantes] = useState<any[]>([]);
-  const [paginaActual, setPaginaActual] = useState(1);
+
+  const [paginaActual, setPaginaActual] =
+    useState(1);
+
+  const [totalPaginas, setTotalPaginas] =
+    useState(1);
+
+  const [totalResultados, setTotalResultados] =
+    useState(0);
 
   const getToken = () =>
     localStorage.getItem("token") ||
@@ -23,7 +30,10 @@ export default function HomePage() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
-    navigate("/", { replace: true });
+
+    navigate("/", {
+      replace: true,
+    });
   };
 
   useEffect(() => {
@@ -41,11 +51,15 @@ export default function HomePage() {
   const timeoutRef = useRef<any>(null);
 
   const resetTimer = () => {
-    if (timeoutRef.current)
+    if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+    }
 
     timeoutRef.current = setTimeout(() => {
-      alert("Sesión expirada por inactividad");
+      alert(
+        "Sesión expirada por inactividad"
+      );
+
       handleLogout();
     }, 5 * 60 * 1000);
   };
@@ -58,7 +72,10 @@ export default function HomePage() {
     ];
 
     events.forEach((event) =>
-      window.addEventListener(event, resetTimer)
+      window.addEventListener(
+        event,
+        resetTimer
+      )
     );
 
     resetTimer();
@@ -73,16 +90,19 @@ export default function HomePage() {
     };
   }, []);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const cargarPagina = async (
+    pagina: number,
+    busqueda = query
+  ) => {
+    if (!busqueda.trim()) return;
 
-    setBuscado(true);
     setLoading(true);
-    setPaginaActual(1);
 
     try {
       const res = await fetch(
-        `${API_URL}/estudiantes/search?q=${query}`,
+        `${API_URL}/estudiantes/search?q=${encodeURIComponent(
+          busqueda
+        )}&page=${pagina}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -103,93 +123,149 @@ export default function HomePage() {
         return;
       }
 
-      const adaptado = data.map((item: any) => ({
-        documento: item.estudiante.documento,
-        nombre: item.estudiante.nombre,
-        identificacion:
-          item.estudiante.documento,
-        tipoId: "CC",
+      const adaptado = data.results.map(
+        (item: any) => ({
+          documento:
+            item.estudiante.documento,
 
-        usuario: item.estudiante.usuario,
+          nombre:
+            item.estudiante.nombre,
 
-        correo: item.estudiante.correo,
-        telefono: item.estudiante.telefono,
+          identificacion:
+            item.estudiante.documento,
 
-        foto: item.estudiante.foto
-          ? `${item.estudiante.foto}`
-          : null,
+          tipoId: "CC",
 
-        programas: item.programas.map(
-          (p: any) => ({
-            nombre: p.nombre,
-            estudiantePensum:
-              p.estudiantePensum,
+          usuario:
+            item.estudiante.usuario,
 
-            jornada: p.jornada,
-            categoria: p.categoria,
-            situacion: p.situacion,
+          correo:
+            item.estudiante.correo,
 
-            liquidaciones:
-              p.liquidaciones.map(
-                (l: any) => ({
-                  anio: l.anio,
-                  periodo: l.periodo,
-                  estado: l.estado,
-                  saldo: l.saldo,
-                  referencia: l.referencia,
-                })
-              ),
-          })
-        ),
-      }));
+          telefono:
+            item.estudiante.telefono,
+
+          foto: item.estudiante.foto
+            ? `${item.estudiante.foto}`
+            : null,
+
+          programas:
+            item.programas.map(
+              (p: any) => ({
+                nombre: p.nombre,
+
+                estudiantePensum:
+                  p.estudiantePensum,
+
+                jornada: p.jornada,
+
+                categoria:
+                  p.categoria,
+
+                situacion:
+                  p.situacion,
+
+                liquidaciones:
+                  p.liquidaciones.map(
+                    (l: any) => ({
+                      anio: l.anio,
+
+                      periodo:
+                        l.periodo,
+
+                      estado: l.estado,
+
+                      saldo: l.saldo,
+
+                      referencia:
+                        l.referencia,
+                    })
+                  ),
+              })
+            ),
+        })
+      );
 
       setEstudiantes(adaptado);
+
+      setPaginaActual(data.page);
+
+      setTotalPaginas(
+        data.totalPages
+      );
+
+      setTotalResultados(
+        data.totalResults
+      );
     } catch (error) {
       console.error(error);
+
       setEstudiantes([]);
     }
 
     setLoading(false);
   };
 
+  const handleSearch = async () => {
+    if (!query.trim()) return;
+
+    setBuscado(true);
+
+    await cargarPagina(1);
+  };
+
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const handleClear = () => {
     setQuery("");
+
     setBuscado(false);
+
     setEstudiantes([]);
+
     setPaginaActual(1);
+
+    setTotalPaginas(1);
+
+    setTotalResultados(0);
   };
 
-  const totalPaginas = Math.ceil(
-    estudiantes.length / ITEMS_PER_PAGE
-  );
+  const irPagina = async (
+    pagina: number
+  ) => {
+    if (
+      pagina < 1 ||
+      pagina > totalPaginas
+    ) {
+      return;
+    }
 
-  const indiceInicio =
-    (paginaActual - 1) * ITEMS_PER_PAGE;
-
-  const indiceFin =
-    indiceInicio + ITEMS_PER_PAGE;
-
-  const estudiantesPagina =
-    estudiantes.slice(
-      indiceInicio,
-      indiceFin
-    );
+    await cargarPagina(pagina);
+  };
 
   return (
     <div className={styles.page}>
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <span className={styles.navLogoIcon}>
+          <span
+            className={
+              styles.navLogoIcon
+            }
+          >
             ▪
           </span>
 
-          <span className={styles.navLogoText}>
+          <span
+            className={
+              styles.navLogoText
+            }
+          >
             WSUP
           </span>
         </div>
@@ -203,34 +279,60 @@ export default function HomePage() {
       </nav>
 
       <div className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
+        <div
+          className={
+            styles.heroContent
+          }
+        >
+          <h1
+            className={
+              styles.heroTitle
+            }
+          >
             Consulta de Estudiantes
           </h1>
 
-          <div className={styles.searchBox}>
+          <div
+            className={
+              styles.searchBox
+            }
+          >
             <input
               type="text"
-              className={styles.searchInput}
+              className={
+                styles.searchInput
+              }
               placeholder="Busca según nombre, código, usuario o programa"
               value={query}
               onChange={(e) =>
-                setQuery(e.target.value)
+                setQuery(
+                  e.target.value
+                )
               }
-              onKeyDown={handleKeyDown}
+              onKeyDown={
+                handleKeyDown
+              }
             />
 
             <button
-              onClick={handleSearch}
-              className={styles.searchBtn}
+              onClick={
+                handleSearch
+              }
+              className={
+                styles.searchBtn
+              }
             >
               Buscar
             </button>
 
             {query && (
               <button
-                onClick={handleClear}
-                className={styles.clearBtn}
+                onClick={
+                  handleClear
+                }
+                className={
+                  styles.clearBtn
+                }
               >
                 ✕
               </button>
@@ -248,49 +350,89 @@ export default function HomePage() {
 
         {buscado &&
           !loading &&
-          estudiantes.length === 0 && (
-            <p className={styles.empty}>
+          estudiantes.length ===
+            0 && (
+            <p
+              className={
+                styles.empty
+              }
+            >
               No encontrado
             </p>
           )}
 
         {estudiantes.length > 0 && (
           <>
+            <p
+              className={
+                styles.resultsInfo
+              }
+            >
+              {totalResultados} resultado
+              {totalResultados !== 1
+                ? "s"
+                : ""}
+            </p>
+
             <div className={styles.grid}>
-              {estudiantesPagina.map((est) => (
-                <StudentCard
-                  key={est.documento}
-                  estudiante={est}
-                />
-              ))}
+              {estudiantes.map(
+                (est) => (
+                  <StudentCard
+                    key={
+                      est.documento
+                    }
+                    estudiante={
+                      est
+                    }
+                  />
+                )
+              )}
             </div>
 
-            <div className={styles.pagination}>
+            <div
+              className={
+                styles.pagination
+              }
+            >
               <button
-                className={styles.pageBtn}
-                disabled={paginaActual === 1}
+                className={
+                  styles.pageBtn
+                }
+                disabled={
+                  paginaActual === 1 ||
+                  loading
+                }
                 onClick={() =>
-                  setPaginaActual(
-                    (prev) => prev - 1
+                  irPagina(
+                    paginaActual - 1
                   )
                 }
               >
                 ← Anterior
               </button>
 
-              <span className={styles.pageInfo}>
-                Página {paginaActual} de{" "}
+              <span
+                className={
+                  styles.pageInfo
+                }
+              >
+                Página{" "}
+                {paginaActual} de{" "}
                 {totalPaginas}
               </span>
 
               <button
-                className={styles.pageBtn}
+                className={
+                  styles.pageBtn
+                }
                 disabled={
-                  paginaActual === totalPaginas
+                  paginaActual ===
+                    totalPaginas ||
+                  loading
                 }
                 onClick={() =>
-                  setPaginaActual(
-                    (prev) => prev + 1
+                  irPagina(
+                    paginaActual + 1
                   )
                 }
               >
