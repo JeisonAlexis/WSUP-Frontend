@@ -35,6 +35,9 @@ export default function StudentCard({
   const [errorFoto, setErrorFoto] =
     useState(false);
 
+  const [imagenAbierta, setImagenAbierta] =
+    useState(false);
+
   const totalPendiente =
     estudiante.programas
       .flatMap((p) => p.liquidaciones)
@@ -62,404 +65,513 @@ export default function StudentCard({
       ? palabras[0][0] + palabras[1][0]
       : palabras[0].slice(0, 2);
 
+  const fotoDisponible =
+    estudiante.foto &&
+    estudiante.foto !==
+      "No disponible" &&
+    !errorFoto;
+
   return (
-    <div
-      className={`${styles.card} ${
-        hayPendientes
-          ? styles.cardAlert
-          : ""
-      }`}
-    >
-      <div className={styles.header}>
-        <div
-          className={styles.avatarWrapper}
-        >
-          {estudiante.foto &&
-          estudiante.foto !==
-            "No disponible" &&
-          !errorFoto ? (
-            <img
-              src={`${API_URL}/uploads/${estudiante.foto}`}
-              alt={estudiante.nombre}
-              className={styles.avatarImg}
-              onError={() =>
-                setErrorFoto(true)
-              }
-            />
-          ) : (
+    <>
+      <div
+        className={`${styles.card} ${
+          hayPendientes
+            ? styles.cardAlert
+            : ""
+        }`}
+      >
+        <div className={styles.header}>
+          <div
+            className={
+              styles.avatarWrapper
+            }
+          >
+            {fotoDisponible ? (
+              <img
+                src={`${API_URL}/uploads/${estudiante.foto}`}
+                alt={estudiante.nombre}
+                className={
+                  styles.avatarImg
+                }
+                onError={() =>
+                  setErrorFoto(true)
+                }
+                onClick={() =>
+                  setImagenAbierta(true)
+                }
+              />
+            ) : (
+              <div
+                className={`${styles.avatar} ${
+                  hayPendientes
+                    ? styles.avatarAlert
+                    : ""
+                }`}
+              >
+                {iniciales}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.headerInfo}>
+            <h3 className={styles.nombre}>
+              {valorDisponible(
+                estudiante.nombre
+              )}
+            </h3>
+
             <div
-              className={`${styles.avatar} ${
-                hayPendientes
-                  ? styles.avatarAlert
-                  : ""
-              }`}
+              className={styles.docRow}
             >
-              {iniciales}
+              <span
+                className={
+                  styles.docBadge
+                }
+              >
+                {valorDisponible(
+                  estudiante.tipoId
+                )}
+              </span>
+
+              <span
+                className={
+                  styles.docNum
+                }
+              >
+                {valorDisponible(
+                  estudiante.identificacion
+                )}
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.userRow
+              }
+            >
+              <span
+                className={
+                  styles.userLabel
+                }
+              >
+                Usuario:
+              </span>
+
+              <span
+                className={
+                  styles.userValue
+                }
+              >
+                {valorDisponible(
+                  estudiante.usuario
+                )}
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.infoRow
+              }
+            >
+              <span>📧</span>
+
+              <span>
+                {valorDisponible(
+                  estudiante.correo
+                )}
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.infoRow
+              }
+            >
+              <span>📱</span>
+
+              <span>
+                {valorDisponible(
+                  estudiante.telefono
+                )}
+              </span>
+            </div>
+          </div>
+
+          {hayPendientes && (
+            <div
+              className={
+                styles.alertBadge
+              }
+            >
+              <span
+                className={
+                  styles.alertDot
+                }
+              />
+
+              Saldo pendiente
             </div>
           )}
         </div>
 
-        <div className={styles.headerInfo}>
-          <h3 className={styles.nombre}>
-            {valorDisponible(
-              estudiante.nombre
-            )}
-          </h3>
-
-          <div className={styles.docRow}>
+        <div className={styles.stats}>
+          <div className={styles.stat}>
             <span
-              className={styles.docBadge}
-            >
-              {valorDisponible(
-                estudiante.tipoId
-              )}
-            </span>
-
-            <span
-              className={styles.docNum}
-            >
-              {valorDisponible(
-                estudiante.identificacion
-              )}
-            </span>
-          </div>
-
-          <div className={styles.userRow}>
-            <span
-              className={styles.userLabel}
-            >
-              Usuario:
-            </span>
-
-            <span
-              className={styles.userValue}
-            >
-              {valorDisponible(
-                estudiante.usuario
-              )}
-            </span>
-          </div>
-
-          <div className={styles.infoRow}>
-            <span>📧</span>
-
-            <span>
-              {valorDisponible(
-                estudiante.correo
-              )}
-            </span>
-          </div>
-
-          <div className={styles.infoRow}>
-            <span>📱</span>
-
-            <span>
-              {valorDisponible(
-                estudiante.telefono
-              )}
-            </span>
-          </div>
-        </div>
-
-        {hayPendientes && (
-          <div
-            className={styles.alertBadge}
-          >
-            <span
-              className={styles.alertDot}
-            />
-
-            Saldo pendiente
-          </div>
-        )}
-      </div>
-
-      <div className={styles.stats}>
-        <div className={styles.stat}>
-          <span
-            className={styles.statValue}
-          >
-            {
-              estudiante.programas
-                .length
-            }
-          </span>
-
-          <span
-            className={styles.statLabel}
-          >
-            {estudiante.programas
-              .length === 1
-              ? "Programa"
-              : "Programas"}
-          </span>
-        </div>
-
-        <div
-          className={styles.statDivider}
-        />
-
-        <div className={styles.stat}>
-          <span
-            className={styles.statValue}
-          >
-            {totalLiquidaciones}
-          </span>
-
-          <span
-            className={styles.statLabel}
-          >
-            Liquidaciones
-          </span>
-        </div>
-
-        <div
-          className={styles.statDivider}
-        />
-
-        <div
-          className={`${styles.stat} ${
-            hayPendientes
-              ? styles.statRed
-              : styles.statGreen
-          }`}
-        >
-          <span
-            className={styles.statValue}
-          >
-            {hayPendientes
-              ? `$${formatSaldo(
-                  totalPendiente
-                )}`
-              : "$0,00"}
-          </span>
-
-          <span
-            className={styles.statLabel}
-          >
-            Saldo total
-          </span>
-        </div>
-      </div>
-
-      {expanded && (
-        <div className={styles.body}>
-          {estudiante.programas
-            .length === 0 ? (
-            <p
               className={
-                styles.emptyFilter
+                styles.statValue
               }
             >
-              Sin programas registrados
-            </p>
-          ) : (
-            estudiante.programas.map(
-              (prog, pi) => (
-                <div
-                  key={pi}
-                  className={
-                    styles.programa
-                  }
-                >
+              {
+                estudiante.programas
+                  .length
+              }
+            </span>
+
+            <span
+              className={
+                styles.statLabel
+              }
+            >
+              {estudiante.programas
+                .length === 1
+                ? "Programa"
+                : "Programas"}
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.statDivider
+            }
+          />
+
+          <div className={styles.stat}>
+            <span
+              className={
+                styles.statValue
+              }
+            >
+              {totalLiquidaciones}
+            </span>
+
+            <span
+              className={
+                styles.statLabel
+              }
+            >
+              Liquidaciones
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.statDivider
+            }
+          />
+
+          <div
+            className={`${styles.stat} ${
+              hayPendientes
+                ? styles.statRed
+                : styles.statGreen
+            }`}
+          >
+            <span
+              className={
+                styles.statValue
+              }
+            >
+              {hayPendientes
+                ? `$${formatSaldo(
+                    totalPendiente
+                  )}`
+                : "$0,00"}
+            </span>
+
+            <span
+              className={
+                styles.statLabel
+              }
+            >
+              Saldo total
+            </span>
+          </div>
+        </div>
+
+        {expanded && (
+          <div className={styles.body}>
+            {estudiante.programas
+              .length === 0 ? (
+              <p
+                className={
+                  styles.emptyFilter
+                }
+              >
+                Sin programas
+                registrados
+              </p>
+            ) : (
+              estudiante.programas.map(
+                (prog, pi) => (
                   <div
+                    key={pi}
                     className={
-                      styles.programaHeader
+                      styles.programa
                     }
                   >
                     <div
                       className={
-                        styles.programaIcon
+                        styles.programaHeader
                       }
                     >
-                      🎓
+                      <div
+                        className={
+                          styles.programaIcon
+                        }
+                      >
+                        🎓
+                      </div>
+
+                      <div>
+                        <p
+                          className={
+                            styles.programaNombre
+                          }
+                        >
+                          {valorDisponible(
+                            prog.nombre
+                          )}
+                        </p>
+
+                        <p
+                          className={
+                            styles.programaPensum
+                          }
+                        >
+                          Pensum{" "}
+                          {valorDisponible(
+                            String(
+                              prog.estudiantePensum
+                            )
+                          )}
+                        </p>
+
+                        <p
+                          className={
+                            styles.programaExtra
+                          }
+                        >
+                          {valorDisponible(
+                            prog.jornada
+                          )}{" "}
+                          ·{" "}
+                          {valorDisponible(
+                            prog.categoria
+                          )}{" "}
+                          ·{" "}
+                          {valorDisponible(
+                            prog.situacion
+                          )}
+                        </p>
+                      </div>
+
+                      <span
+                        className={
+                          styles.liqCount
+                        }
+                      >
+                        {
+                          prog
+                            .liquidaciones
+                            .length
+                        }{" "}
+                        registro
+                        {prog
+                          .liquidaciones
+                          .length !== 1
+                          ? "s"
+                          : ""}
+                      </span>
                     </div>
 
-                    <div>
-                      <p
-                        className={
-                          styles.programaNombre
-                        }
-                      >
-                        {valorDisponible(
-                          prog.nombre
-                        )}
-                      </p>
-
-                      <p
-                        className={
-                          styles.programaPensum
-                        }
-                      >
-                        Pensum{" "}
-                        {valorDisponible(
-                          String(
-                            prog.estudiantePensum
-                          )
-                        )}
-                      </p>
-
-                      <p
-                        className={
-                          styles.programaExtra
-                        }
-                      >
-                        {valorDisponible(
-                          prog.jornada
-                        )}{" "}
-                        ·{" "}
-                        {valorDisponible(
-                          prog.categoria
-                        )}{" "}
-                        ·{" "}
-                        {valorDisponible(
-                          prog.situacion
-                        )}
-                      </p>
-                    </div>
-
-                    <span
+                    <div
                       className={
-                        styles.liqCount
+                        styles.liquidaciones
                       }
                     >
-                      {
-                        prog.liquidaciones
-                          .length
-                      }{" "}
-                      registro
-                      {prog.liquidaciones
-                        .length !== 1
-                        ? "s"
-                        : ""}
-                    </span>
-                  </div>
-
-                  <div
-                    className={
-                      styles.liquidaciones
-                    }
-                  >
-                    {prog.liquidaciones
-                      .length === 0 ? (
-                      <p
-                        className={
-                          styles.emptyFilter
-                        }
-                      >
-                        Sin liquidaciones
-                      </p>
-                    ) : (
-                      prog.liquidaciones.map(
-                        (liq, li) => (
-                          <div
-                            key={li}
-                            className={`${styles.liqRow} ${
-                              liq.estado ===
-                              "PENDIENTE"
-                                ? styles.liqPendiente
-                                : styles.liqPagado
-                            }`}
-                          >
+                      {prog
+                        .liquidaciones
+                        .length ===
+                      0 ? (
+                        <p
+                          className={
+                            styles.emptyFilter
+                          }
+                        >
+                          Sin
+                          liquidaciones
+                        </p>
+                      ) : (
+                        prog.liquidaciones.map(
+                          (
+                            liq,
+                            li
+                          ) => (
                             <div
-                              className={
-                                styles.liqLeft
+                              key={
+                                li
                               }
+                              className={`${styles.liqRow} ${
+                                liq.estado ===
+                                "PENDIENTE"
+                                  ? styles.liqPendiente
+                                  : styles.liqPagado
+                              }`}
                             >
-                              <span
-                                className={`${styles.estadoBadge} ${
-                                  liq.estado ===
-                                  "PENDIENTE"
-                                    ? styles.estadoPendiente
-                                    : styles.estadoPagado
-                                }`}
-                              >
-                                {liq.estado ===
-                                "PAGADO"
-                                  ? "✓"
-                                  : "!"}{" "}
-                                {valorDisponible(
-                                  liq.estado
-                                )}
-                              </span>
-
-                              <span
+                              <div
                                 className={
-                                  styles.liqPeriodo
+                                  styles.liqLeft
                                 }
                               >
-                                {
-                                  liq.anio
-                                }{" "}
-                                – P
-                                {
-                                  liq.periodo
-                                }
-                              </span>
-                            </div>
+                                <span
+                                  className={`${styles.estadoBadge} ${
+                                    liq.estado ===
+                                    "PENDIENTE"
+                                      ? styles.estadoPendiente
+                                      : styles.estadoPagado
+                                  }`}
+                                >
+                                  {liq.estado ===
+                                  "PAGADO"
+                                    ? "✓"
+                                    : "!"}{" "}
+                                  {valorDisponible(
+                                    liq.estado
+                                  )}
+                                </span>
 
-                            <div
-                              className={
-                                styles.liqRight
-                              }
-                            >
-                              <span
-                                className={`${styles.liqSaldo} ${
-                                  liq.saldo >
-                                  0
-                                    ? styles.saldoRed
-                                    : styles.saldoGreen
-                                }`}
-                              >
-                                $
-                                {formatSaldo(
-                                  liq.saldo
-                                )}
-                              </span>
+                                <span
+                                  className={
+                                    styles.liqPeriodo
+                                  }
+                                >
+                                  {
+                                    liq.anio
+                                  }{" "}
+                                  – P
+                                  {
+                                    liq.periodo
+                                  }
+                                </span>
+                              </div>
 
-                              <span
+                              <div
                                 className={
-                                  styles.liqRef
+                                  styles.liqRight
                                 }
                               >
-                                {valorDisponible(
-                                  liq.referencia
-                                )}
-                              </span>
+                                <span
+                                  className={`${styles.liqSaldo} ${
+                                    liq.saldo >
+                                    0
+                                      ? styles.saldoRed
+                                      : styles.saldoGreen
+                                  }`}
+                                >
+                                  $
+                                  {formatSaldo(
+                                    liq.saldo
+                                  )}
+                                </span>
+
+                                <span
+                                  className={
+                                    styles.liqRef
+                                  }
+                                >
+                                  {valorDisponible(
+                                    liq.referencia
+                                  )}
+                                </span>
+                              </div>
                             </div>
-                          </div>
+                          )
                         )
-                      )
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
+                )
               )
-            )
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
 
-      <button
-        className={styles.toggleBtn}
-        onClick={() =>
-          setExpanded((v) => !v)
-        }
-        aria-expanded={expanded}
-      >
-        {expanded
-          ? "Ocultar detalle"
-          : `Ver detalle · ${totalLiquidaciones} liquidaciones`}
-
-        <span
-          className={`${styles.chevron} ${
-            expanded
-              ? styles.chevronUp
-              : ""
-          }`}
+        <button
+          className={
+            styles.toggleBtn
+          }
+          onClick={() =>
+            setExpanded((v) => !v)
+          }
+          aria-expanded={expanded}
         >
-          ›
-        </span>
-      </button>
-    </div>
+          {expanded
+            ? "Ocultar detalle"
+            : `Ver detalle · ${totalLiquidaciones} liquidaciones`}
+
+          <span
+            className={`${styles.chevron} ${
+              expanded
+                ? styles.chevronUp
+                : ""
+            }`}
+          >
+            ›
+          </span>
+        </button>
+      </div>
+
+      {imagenAbierta &&
+        fotoDisponible && (
+          <div
+            className={
+              styles.modalOverlay
+            }
+            onClick={() =>
+              setImagenAbierta(false)
+            }
+          >
+            <button
+              className={
+                styles.closeModal
+              }
+              onClick={() =>
+                setImagenAbierta(false)
+              }
+            >
+              ✕
+            </button>
+
+            <div
+              className={
+                styles.modalContent
+              }
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+              <img
+                src={`${API_URL}/uploads/${estudiante.foto}`}
+                alt={
+                  estudiante.nombre
+                }
+                className={
+                  styles.modalImg
+                }
+              />
+            </div>
+          </div>
+        )}
+    </>
   );
 }
