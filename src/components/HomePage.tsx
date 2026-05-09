@@ -98,7 +98,7 @@ export default function HomePage() {
         telefono: item.estudiante.telefono,
 
         foto: item.estudiante.foto
-          ? `${API_URL}/uploads/${item.estudiante.foto}`
+          ? `/uploads/${item.estudiante.foto}`
           : null,
 
         programas: item.programas.map((p: any) => ({
