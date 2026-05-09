@@ -5,6 +5,8 @@ import styles from "./HomePage.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const ITEMS_PER_PAGE = 10;
+
 export default function HomePage() {
   const navigate = useNavigate();
 
@@ -12,9 +14,11 @@ export default function HomePage() {
   const [buscado, setBuscado] = useState(false);
   const [loading, setLoading] = useState(false);
   const [estudiantes, setEstudiantes] = useState<any[]>([]);
+  const [paginaActual, setPaginaActual] = useState(1);
 
   const getToken = () =>
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -23,7 +27,11 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    window.history.pushState(null, "", window.location.href);
+    window.history.pushState(
+      null,
+      "",
+      window.location.href
+    );
 
     window.onpopstate = () => {
       handleLogout();
@@ -33,7 +41,8 @@ export default function HomePage() {
   const timeoutRef = useRef<any>(null);
 
   const resetTimer = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (timeoutRef.current)
+      clearTimeout(timeoutRef.current);
 
     timeoutRef.current = setTimeout(() => {
       alert("Sesión expirada por inactividad");
@@ -42,7 +51,11 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    const events = ["mousemove", "keydown", "click"];
+    const events = [
+      "mousemove",
+      "keydown",
+      "click",
+    ];
 
     events.forEach((event) =>
       window.addEventListener(event, resetTimer)
@@ -52,7 +65,10 @@ export default function HomePage() {
 
     return () => {
       events.forEach((event) =>
-        window.removeEventListener(event, resetTimer)
+        window.removeEventListener(
+          event,
+          resetTimer
+        )
       );
     };
   }, []);
@@ -62,6 +78,7 @@ export default function HomePage() {
 
     setBuscado(true);
     setLoading(true);
+    setPaginaActual(1);
 
     try {
       const res = await fetch(
@@ -89,7 +106,8 @@ export default function HomePage() {
       const adaptado = data.map((item: any) => ({
         documento: item.estudiante.documento,
         nombre: item.estudiante.nombre,
-        identificacion: item.estudiante.documento,
+        identificacion:
+          item.estudiante.documento,
         tipoId: "CC",
 
         usuario: item.estudiante.usuario,
@@ -101,22 +119,28 @@ export default function HomePage() {
           ? `${item.estudiante.foto}`
           : null,
 
-        programas: item.programas.map((p: any) => ({
-          nombre: p.nombre,
-          estudiantePensum: p.estudiantePensum,
+        programas: item.programas.map(
+          (p: any) => ({
+            nombre: p.nombre,
+            estudiantePensum:
+              p.estudiantePensum,
 
-          jornada: p.jornada,
-          categoria: p.categoria,
-          situacion: p.situacion,
+            jornada: p.jornada,
+            categoria: p.categoria,
+            situacion: p.situacion,
 
-          liquidaciones: p.liquidaciones.map((l: any) => ({
-            anio: l.anio,
-            periodo: l.periodo,
-            estado: l.estado,
-            saldo: l.saldo,
-            referencia: l.referencia,
-          })),
-        })),
+            liquidaciones:
+              p.liquidaciones.map(
+                (l: any) => ({
+                  anio: l.anio,
+                  periodo: l.periodo,
+                  estado: l.estado,
+                  saldo: l.saldo,
+                  referencia: l.referencia,
+                })
+              ),
+          })
+        ),
       }));
 
       setEstudiantes(adaptado);
@@ -138,14 +162,36 @@ export default function HomePage() {
     setQuery("");
     setBuscado(false);
     setEstudiantes([]);
+    setPaginaActual(1);
   };
+
+  const totalPaginas = Math.ceil(
+    estudiantes.length / ITEMS_PER_PAGE
+  );
+
+  const indiceInicio =
+    (paginaActual - 1) * ITEMS_PER_PAGE;
+
+  const indiceFin =
+    indiceInicio + ITEMS_PER_PAGE;
+
+  const estudiantesPagina =
+    estudiantes.slice(
+      indiceInicio,
+      indiceFin
+    );
 
   return (
     <div className={styles.page}>
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <span className={styles.navLogoIcon}>▪</span>
-          <span className={styles.navLogoText}>WSUP</span>
+          <span className={styles.navLogoIcon}>
+            ▪
+          </span>
+
+          <span className={styles.navLogoText}>
+            WSUP
+          </span>
         </div>
 
         <button
@@ -168,7 +214,9 @@ export default function HomePage() {
               className={styles.searchInput}
               placeholder="Busca según nombre, código, usuario o programa"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) =>
+                setQuery(e.target.value)
+              }
               onKeyDown={handleKeyDown}
             />
 
@@ -198,21 +246,58 @@ export default function HomePage() {
           </p>
         )}
 
-        {buscado && !loading && estudiantes.length === 0 && (
-          <p className={styles.empty}>
-            No encontrado
-          </p>
-        )}
+        {buscado &&
+          !loading &&
+          estudiantes.length === 0 && (
+            <p className={styles.empty}>
+              No encontrado
+            </p>
+          )}
 
         {estudiantes.length > 0 && (
-          <div className={styles.grid}>
-            {estudiantes.map((est) => (
-              <StudentCard
-                key={est.documento}
-                estudiante={est}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles.grid}>
+              {estudiantesPagina.map((est) => (
+                <StudentCard
+                  key={est.documento}
+                  estudiante={est}
+                />
+              ))}
+            </div>
+
+            <div className={styles.pagination}>
+              <button
+                className={styles.pageBtn}
+                disabled={paginaActual === 1}
+                onClick={() =>
+                  setPaginaActual(
+                    (prev) => prev - 1
+                  )
+                }
+              >
+                ← Anterior
+              </button>
+
+              <span className={styles.pageInfo}>
+                Página {paginaActual} de{" "}
+                {totalPaginas}
+              </span>
+
+              <button
+                className={styles.pageBtn}
+                disabled={
+                  paginaActual === totalPaginas
+                }
+                onClick={() =>
+                  setPaginaActual(
+                    (prev) => prev + 1
+                  )
+                }
+              >
+                Siguiente →
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>
