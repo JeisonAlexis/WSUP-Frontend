@@ -28,6 +28,7 @@ export interface Estudiante {
   correo?: string;
   telefono?: string;
   foto?: string;
+  sede?: string;
   programas: Programa[];
 }
 

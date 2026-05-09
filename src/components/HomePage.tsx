@@ -149,6 +149,9 @@ export default function HomePage() {
             ? `${item.estudiante.foto}`
             : null,
 
+          sede:
+            item.estudiante.sede,
+
           programas:
             item.programas.map(
               (p: any) => ({
@@ -185,7 +188,6 @@ export default function HomePage() {
             ),
         })
       );
-
       setEstudiantes(adaptado);
 
       setPaginaActual(data.page);
@@ -351,7 +353,7 @@ export default function HomePage() {
         {buscado &&
           !loading &&
           estudiantes.length ===
-            0 && (
+          0 && (
             <p
               className={
                 styles.empty
@@ -427,7 +429,7 @@ export default function HomePage() {
                 }
                 disabled={
                   paginaActual ===
-                    totalPaginas ||
+                  totalPaginas ||
                   loading
                 }
                 onClick={() =>

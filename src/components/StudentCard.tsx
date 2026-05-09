@@ -173,6 +173,20 @@ export default function StudentCard({
                 styles.infoRow
               }
             >
+              <span>🏢</span>
+
+              <span>
+                {valorDisponible(
+                  estudiante.sede
+                )}
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.infoRow
+              }
+            >
               <span>📧</span>
 
               <span>
