@@ -16,6 +16,7 @@ function formatSaldo(saldo: number) {
 
 export default function StudentCard({ estudiante }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [errorFoto, setErrorFoto] = useState(false);
 
   const totalPendiente = estudiante.programas
     .flatMap((p) => p.liquidaciones)
@@ -42,11 +43,14 @@ export default function StudentCard({ estudiante }: Props) {
     >
       <div className={styles.header}>
         <div className={styles.avatarWrapper}>
-          {estudiante.foto ? (
+          {estudiante.foto &&
+          estudiante.foto !== "No disponible" &&
+          !errorFoto ? (
             <img
               src={`${API_URL}/uploads/${estudiante.foto}`}
               alt={estudiante.nombre}
               className={styles.avatarImg}
+              onError={() => setErrorFoto(true)}
             />
           ) : (
             <div
