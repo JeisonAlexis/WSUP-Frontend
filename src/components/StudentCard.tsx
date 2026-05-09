@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Estudiante } from "../types/student";
 import styles from "./StudentCard.module.css";
 
-//const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Props {
   estudiante: Estudiante;
@@ -44,7 +44,7 @@ export default function StudentCard({ estudiante }: Props) {
         <div className={styles.avatarWrapper}>
           {estudiante.foto ? (
             <img
-              src={`/uploads/${estudiante.foto}`}
+              src={`${API_URL}/uploads/${estudiante.foto}`}
               alt={estudiante.nombre}
               className={styles.avatarImg}
             />
