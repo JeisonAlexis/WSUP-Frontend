@@ -1,4 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
 .card {
+  width: 100%;
+  max-width: 520px;
   background: #ffffff;
   border-radius: 18px;
   border: 1.5px solid #f0eeff;
@@ -8,58 +12,76 @@
   transition: box-shadow 0.25s ease,
     transform 0.2s ease;
   animation: cardIn 0.35s ease both;
-  width: 100%;
-  max-width: 520px;
-  min-height: 320px;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card:hover {
-  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.13),
+  box-shadow: 0 8px 32px
+      rgba(124, 58, 237, 0.13),
     0 2px 8px rgba(0, 0, 0, 0.06);
+
   transform: translateY(-2px);
+}
+
+.cardAlert {
+  border-color: #fde68a;
 }
 
 .header {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 20px 22px 16px;
+  gap: 16px;
+  padding: 22px;
 }
 
 .avatarWrapper {
-  width: 82px;
-  height: 82px;
-  min-width: 82px;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #f3f4f6;
+  width: 88px;
+  height: 88px;
   flex-shrink: 0;
 }
 
 .avatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  width: 88px;
+  height: 88px;
   border-radius: 18px;
+  object-fit: cover;
+  border: 2px solid #ede9fe;
+  display: block;
 }
 
 .avatar {
-  width: 100%;
-  height: 100%;
+  width: 88px;
+  height: 88px;
   border-radius: 18px;
   background: linear-gradient(
     135deg,
     #7c3aed 0%,
     #a78bfa 100%
   );
+
   color: #fff;
+
   font-family: "Manrope", sans-serif;
   font-weight: 800;
-  font-size: 24px;
+  font-size: 28px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
+
   letter-spacing: 0.05em;
 }
 
@@ -74,43 +96,40 @@
 .headerInfo {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
 .nombre {
   font-family: "Manrope", sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   color: #1a1a2e;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   line-height: 1.3;
-  word-break: break-word;
 }
 
 .docRow {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .docBadge {
   font-family: "Manrope", sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: #7c3aed;
   background: #f5f3ff;
-  border-radius: 5px;
-  padding: 2px 6px;
+  border-radius: 6px;
+  padding: 3px 7px;
   letter-spacing: 0.04em;
 }
 
 .docNum {
   font-family: "Manrope", sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #9ca3af;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .userRow,
@@ -118,18 +137,22 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 4px;
-  flex-wrap: wrap;
+  margin-top: 6px;
 }
 
 .userLabel {
   font-family: "Manrope", sans-serif;
   font-size: 13px;
   font-weight: 700;
-  color: #4b5563;
+  color: #6b7280;
 }
 
-.userValue,
+.userValue {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: #1f2937;
+}
+
 .infoRow span:last-child {
   font-family: "Manrope", sans-serif;
   font-size: 14px;
@@ -141,16 +164,39 @@
   display: flex;
   align-items: center;
   gap: 5px;
+
   font-family: "Manrope", sans-serif;
   font-size: 11px;
   font-weight: 600;
+
   color: #b45309;
   background: #fef9c3;
+
   border: 1px solid #fde68a;
   border-radius: 20px;
+
   padding: 4px 10px;
+
   white-space: nowrap;
-  align-self: flex-start;
+}
+
+.alertDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .stats {
@@ -167,20 +213,21 @@
   flex-direction: column;
   align-items: center;
   flex: 1;
-  gap: 2px;
+  gap: 4px;
 }
 
 .statValue {
   font-family: "Manrope", sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: #1a1a2e;
+  line-height: 1;
 }
 
 .statLabel {
   font-family: "Manrope", sans-serif;
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -196,6 +243,275 @@
 
 .statDivider {
   width: 1px;
-  height: 36px;
+  height: 34px;
   background: #e5e7eb;
+}
+
+.body {
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.emptyFilter {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: #9ca3af;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.programa {
+  background: #f9f8ff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #ede9fe;
+}
+
+.programaHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid #ede9fe;
+}
+
+.programaIcon {
+  font-size: 22px;
+}
+
+.programaNombre {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #4c1d95;
+  margin: 0 0 4px;
+}
+
+.programaPensum {
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  color: #8b5cf6;
+  margin: 0;
+  font-weight: 600;
+}
+
+.programaExtra {
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.liqCount {
+  margin-left: auto;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #7c3aed;
+  background: #ede9fe;
+
+  border-radius: 20px;
+
+  padding: 4px 10px;
+}
+
+.liquidaciones {
+  display: flex;
+  flex-direction: column;
+}
+
+.liqRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 14px;
+
+  border-bottom: 1px solid
+    rgba(237, 233, 254, 0.5);
+
+  gap: 8px;
+
+  transition: background 0.15s;
+}
+
+.liqRow:last-child {
+  border-bottom: none;
+}
+
+.liqPendiente {
+  background: #fffbeb;
+}
+
+.liqPagado {
+  background: transparent;
+}
+
+.liqPagado:hover {
+  background: #f9f8ff;
+}
+
+.liqLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.estadoBadge {
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+
+  border-radius: 6px;
+
+  padding: 2px 7px;
+
+  white-space: nowrap;
+}
+
+.estadoPagado {
+  color: #065f46;
+  background: #d1fae5;
+}
+
+.estadoPendiente {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.liqPeriodo {
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.liqRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.liqSaldo {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.saldoGreen {
+  color: #059669;
+}
+
+.saldoRed {
+  color: #dc2626;
+}
+
+.liqRef {
+  font-family: "Manrope", monospace;
+  font-size: 9px;
+  color: #d1d5db;
+  letter-spacing: 0.03em;
+}
+
+.toggleBtn {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 14px 22px;
+
+  background: none;
+  border: none;
+  border-top: 1px solid #f3f4f6;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #7c3aed;
+
+  cursor: pointer;
+
+  transition: background 0.15s,
+    color 0.15s;
+}
+
+.toggleBtn:hover {
+  background: #f5f3ff;
+}
+
+.chevron {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-block;
+  transform: rotate(90deg);
+  transition: transform 0.25s ease;
+}
+
+.chevronUp {
+  transform: rotate(-90deg);
+}
+
+@media (max-width: 640px) {
+  .card {
+    max-width: 100%;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .headerInfo {
+    width: 100%;
+  }
+
+  .docRow,
+  .userRow,
+  .infoRow {
+    justify-content: center;
+  }
+
+  .alertBadge {
+    margin-top: 10px;
+  }
+
+  .programaHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .liqCount {
+    margin-left: 0;
+  }
+
+  .liqRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .liqRight {
+    align-items: flex-start;
+  }
 }
