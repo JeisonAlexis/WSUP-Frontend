@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Estudiante } from "../types/student";
 import styles from "./StudentCard.module.css";
 
-const API_URL = import.meta.env.VITE_API_URL;
+//const API_URL = import.meta.env.VITE_API_URL;
 
 interface Props {
   estudiante: Estudiante;
