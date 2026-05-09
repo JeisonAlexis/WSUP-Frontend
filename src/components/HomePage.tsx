@@ -145,9 +145,8 @@ export default function HomePage() {
           telefono:
             item.estudiante.telefono,
 
-          foto: item.estudiante.foto
-            ? `${item.estudiante.foto}`
-            : null,
+          foto: 
+            item.estudiante.foto || null,
 
           sede:
             item.estudiante.sede,

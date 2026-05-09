@@ -67,18 +67,16 @@ export default function StudentCard({
 
   const fotoDisponible =
     estudiante.foto &&
-    estudiante.foto !==
-      "No disponible" &&
+    estudiante.foto.startsWith("http") &&
     !errorFoto;
 
   return (
     <>
       <div
-        className={`${styles.card} ${
-          hayPendientes
+        className={`${styles.card} ${hayPendientes
             ? styles.cardAlert
             : ""
-        }`}
+          }`}
       >
         <div className={styles.header}>
           <div
@@ -88,7 +86,7 @@ export default function StudentCard({
           >
             {fotoDisponible ? (
               <img
-                src={`${API_URL}/uploads/${estudiante.foto}`}
+                src={estudiante.foto}
                 alt={estudiante.nombre}
                 className={
                   styles.avatarImg
@@ -102,11 +100,10 @@ export default function StudentCard({
               />
             ) : (
               <div
-                className={`${styles.avatar} ${
-                  hayPendientes
+                className={`${styles.avatar} ${hayPendientes
                     ? styles.avatarAlert
                     : ""
-                }`}
+                  }`}
               >
                 {iniciales}
               </div>
@@ -284,11 +281,10 @@ export default function StudentCard({
           />
 
           <div
-            className={`${styles.stat} ${
-              hayPendientes
+            className={`${styles.stat} ${hayPendientes
                 ? styles.statRed
                 : styles.statGreen
-            }`}
+              }`}
           >
             <span
               className={
@@ -297,8 +293,8 @@ export default function StudentCard({
             >
               {hayPendientes
                 ? `$${formatSaldo(
-                    totalPendiente
-                  )}`
+                  totalPendiente
+                )}`
                 : "$0,00"}
             </span>
 
@@ -416,7 +412,7 @@ export default function StudentCard({
                       {prog
                         .liquidaciones
                         .length ===
-                      0 ? (
+                        0 ? (
                         <p
                           className={
                             styles.emptyFilter
@@ -435,12 +431,11 @@ export default function StudentCard({
                               key={
                                 li
                               }
-                              className={`${styles.liqRow} ${
-                                liq.estado ===
-                                "PENDIENTE"
+                              className={`${styles.liqRow} ${liq.estado ===
+                                  "PENDIENTE"
                                   ? styles.liqPendiente
                                   : styles.liqPagado
-                              }`}
+                                }`}
                             >
                               <div
                                 className={
@@ -448,15 +443,14 @@ export default function StudentCard({
                                 }
                               >
                                 <span
-                                  className={`${styles.estadoBadge} ${
-                                    liq.estado ===
-                                    "PENDIENTE"
+                                  className={`${styles.estadoBadge} ${liq.estado ===
+                                      "PENDIENTE"
                                       ? styles.estadoPendiente
                                       : styles.estadoPagado
-                                  }`}
+                                    }`}
                                 >
                                   {liq.estado ===
-                                  "PAGADO"
+                                    "PAGADO"
                                     ? "✓"
                                     : "!"}{" "}
                                   {valorDisponible(
@@ -485,12 +479,11 @@ export default function StudentCard({
                                 }
                               >
                                 <span
-                                  className={`${styles.liqSaldo} ${
-                                    liq.saldo >
-                                    0
+                                  className={`${styles.liqSaldo} ${liq.saldo >
+                                      0
                                       ? styles.saldoRed
                                       : styles.saldoGreen
-                                  }`}
+                                    }`}
                                 >
                                   $
                                   {formatSaldo(
@@ -534,11 +527,10 @@ export default function StudentCard({
             : `Ver detalle · ${totalLiquidaciones} liquidaciones`}
 
           <span
-            className={`${styles.chevron} ${
-              expanded
+            className={`${styles.chevron} ${expanded
                 ? styles.chevronUp
                 : ""
-            }`}
+              }`}
           >
             ›
           </span>
@@ -575,7 +567,7 @@ export default function StudentCard({
               }
             >
               <img
-                src={`${API_URL}/uploads/${estudiante.foto}`}
+                src={estudiante.foto}
                 alt={
                   estudiante.nombre
                 }
